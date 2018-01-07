@@ -1,19 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.Core;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.System;
 using Windows.UI;
 using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using WINsiderIoT.Models;
 using WINsiderIoT.ViewModels;
@@ -31,7 +21,7 @@ namespace WINsiderIoT
         /// <summary>
         /// Gets or sets the view model of this page.
         /// </summary>
-        private FeedViewModel ViewModel { get; set; }
+        private readonly FeedViewModel _viewModel;
 
         #endregion
 
@@ -43,12 +33,13 @@ namespace WINsiderIoT
 
             // Customize title bar
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
-            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
             titleBar.ButtonBackgroundColor = Colors.Transparent;
             titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
 
             // Instantiate view model
-            ViewModel = new FeedViewModel();
+            _viewModel = new FeedViewModel();
+            DataContext = _viewModel;
         }
 
         #endregion
@@ -57,13 +48,13 @@ namespace WINsiderIoT
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            ViewModel.LoadItemsCommand.Execute(null);
+            _viewModel.LoadItemsCommand.Execute(null);
         }
 
         private async void OnListItemClicked(object sender, ItemClickEventArgs e)
         {
-            var item = ((FeedItem)e.ClickedItem);
-            await Windows.System.Launcher.LaunchUriAsync(item.Uri);
+            var item = (FeedItem)e.ClickedItem;
+            await Launcher.LaunchUriAsync(item.Uri);
         }
 
         #endregion
