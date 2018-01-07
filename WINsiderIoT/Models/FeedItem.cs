@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using Windows.UI.Xaml.Controls;
 
 namespace WINsiderIoT.Models
 {
@@ -9,6 +8,11 @@ namespace WINsiderIoT.Models
     /// </summary>
     public class FeedItem
     {
+        /// <summary>
+        /// CSS-based styling parameters for feed item html content.
+        /// </summary>
+        private const string HtmlStyle = "<style>body { font-family: sans-serif; font: caption; color: #4A4A4A;} h3 {line-height: 1.5em;} h1 {font-size: 100%; color: #37A3CF;} img, iframe { max-width: 100% !important; height:auto !important;} p {line-height: 1.5em;} a {color: #37A3CF; text-decoration: none;}</style>";
+
         #region Public members
 
         /// <summary>
@@ -35,11 +39,11 @@ namespace WINsiderIoT.Models
         /// <value>The URI to the blog post</value>
         public Uri Uri { get; set; }
 
-		/// <summary>
-		/// Gets or sets the feed author identifier.
-		/// </summary>
-		/// <value>The feed author identifier.</value>
-		public string Author { get; set; }
+        /// <summary>
+        /// Gets or sets the feed author identifier.
+        /// </summary>
+        /// <value>The feed author identifier.</value>
+        public string Author { get; set; }
 
         #endregion
 
@@ -51,19 +55,8 @@ namespace WINsiderIoT.Models
         /// <value>The publish date.</value>
         public string PublishDate
         {
-            get { return publishDate; }
-
-            set
-            {
-                if (DateTime.TryParse(value, out DateTime time))
-                {
-                    publishDate = time.ToLocalTime().ToString("dd.MM.yyyy");
-                }
-                else
-                {
-                    publishDate = value;
-                }
-            }
+            get => _publishDate;
+            set => _publishDate = DateTime.TryParse(value, out DateTime time) ? time.ToLocalTime().ToString("dd.MM.yyyy") : value;
         }
 
         /// <summary>
@@ -73,13 +66,11 @@ namespace WINsiderIoT.Models
         {
             get
             {
-                if(!string.IsNullOrEmpty(styledDescripton))
-                {
-                    return styledDescripton;
-                }
+                if (!string.IsNullOrEmpty(_styledDescripton))
+                    return _styledDescripton;
 
-                styledDescripton = htmlStyle + Description;
-                return styledDescripton;
+                _styledDescripton = HtmlStyle + Description;
+                return _styledDescripton;
             }
         }
 
@@ -88,48 +79,35 @@ namespace WINsiderIoT.Models
         /// </summary>
         /// <value>The caption.</value>
 		public string Caption
-		{
-			get
-			{
-                if (!string.IsNullOrWhiteSpace(caption))
-                {
-                    return caption;
-                }
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(_caption))
+                    return _caption;
 
-				// Remove Html tags
-				caption = Regex.Replace(Description, "<[^>]*>", string.Empty);
-
-				return caption;
-			}
-		}
+                // Remove Html tags
+                _caption = Regex.Replace(Description, "<[^>]*>", string.Empty);
+                return _caption;
+            }
+        }
 
         /// <summary>
         /// Gets the first image of the blog post
         /// </summary>
         /// <value>The first image.</value>
 		public string FirstImage
-		{
-			get
-			{
-                if (!string.IsNullOrWhiteSpace(firstImage))
-                {
-                    return firstImage;
-                }
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(_firstImage))
+                    return _firstImage;
 
                 var foundImageString = Regex.Match(Description, "<img.+?src=[\"'](.+?)[\"'].*?>", RegexOptions.IgnoreCase).Groups[1].Value;
 
-                if (foundImageString.Length > 0)
-                {
-                    firstImage = foundImageString;
-                }
-                else
-                {
-                    firstImage = Placeholder;
-                }
-
-				return firstImage;
-			}
-		}
+                _firstImage = foundImageString.Length > 0 ? foundImageString : Placeholder;
+                return _firstImage;
+            }
+        }
 
         #endregion
 
@@ -138,29 +116,16 @@ namespace WINsiderIoT.Models
         /// <summary>
         /// Cover image placeholder link./Assets/placeholder.png
         /// </summary>
-        public static string Placeholder { get { return "/Assets/placeholder.png"; } }
+        public static string Placeholder => "/Assets/placeholder.png";
 
-        #endregion
-
-        /// <summary>
-        /// CSS-based styling parameters for feed item html content.
-        /// </summary>
-        private const string htmlStyle = "<style>body { font-family: sans-serif; font: caption; color: #4A4A4A;} h3 {line-height: 1.5em;} h1 {font-size: 100%; color: #37A3CF;} img, iframe { max-width: 100% !important; height:auto !important;} p {line-height: 1.5em;} a {color: #37A3CF; text-decoration: none;}</style>";
+        #endregion        
 
         #region Private backing fields
 
-        private string styledDescripton;
-        private string caption;
-        private string publishDate;
-		private string firstImage;
-
-        #endregion
-
-        #region Constructor
-
-        public FeedItem()
-        {
-        }
+        private string _styledDescripton;
+        private string _caption;
+        private string _publishDate;
+        private string _firstImage;
 
         #endregion
     }
