@@ -1,14 +1,11 @@
-﻿<Page
-    x:Class="WINsiderIoT.MainPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
-    mc:Ignorable="d"
-    Width="{StaticResource RaspberryPiWidth}"
-    Height="{StaticResource RaspberryPiHeight}">
+﻿<Page x:Class="WINsiderIoT.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+      xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+      mc:Ignorable="d">
 
     <Grid Background="{StaticResource ResourceKey=PrimaryBackgroundAccentAcrylBrush}">
 
@@ -18,65 +15,67 @@
             <!-- Content -->
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
+
         <!-- App title -->
         <TextBlock Grid.Row="0" 
-                       Style="{StaticResource ResourceKey=AppTitleTextBlockStyle}"
-                       Text="WINsider Community Deutschland"/>
+                   Style="{StaticResource ResourceKey=AppTitleTextBlockStyle}"
+                   Text="WINsider Community Deutschland"/>
 
         <!-- Horizontal list -->
         <ListView Grid.Row="1"
                   Style="{StaticResource HorizontalListViewStyle}"
-                  ItemsSource="{x:Bind ViewModel.FeedItems}" 
+                  ItemsSource="{Binding FeedItems}" 
                   ItemClick="OnListItemClicked">
-            
+
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <StackPanel Style="{StaticResource HorizontalStackPanelStyle}"></StackPanel>
+                    <VirtualizingStackPanel Style="{StaticResource HorizontalStackPanelStyle}"/>
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
 
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <ScrollViewer Style="{StaticResource VerticalScrollViewerStyle}">
+                    <Grid Style="{StaticResource ContentGridStyle}"
+                          VerticalAlignment="Top">
+                        <Grid.RowDefinitions>
+                            <!-- Image & Title -->
+                            <RowDefinition Height="180" />
+                            <!-- Content-->
+                            <RowDefinition Height="252" />
+                        </Grid.RowDefinitions>
 
-                        <Grid VerticalAlignment="Top">
-                            <Grid.RowDefinitions>
-                                <!-- Image & Title -->
-                                <RowDefinition Height="180" />
-                                <!-- Content-->
-                                <RowDefinition Height="252" />
-                            </Grid.RowDefinitions>
-                            
-                            <!-- Cover image-->
-                            <controls:ImageEx Grid.Row="0"
+                        <!-- Cover image-->
+                        <controls:ImageEx Grid.Row="0"
                                               Style="{StaticResource CoverImageStyle}"
                                               IsCacheEnabled="True"
                                               Stretch="UniformToFill"
                                               PlaceholderSource="/Assets/placeholder.png"
                                               Source="{Binding FirstImage}"/>
 
-                            <!-- Cover image title -->
-                            <StackPanel Grid.Row="0" Style="{StaticResource CoverImageTitleStackPanelStyle}">
-                                <TextBlock  Text="{Binding Title}" Style="{StaticResource DetailTitle}"  />
-                            </StackPanel>
+                        <!-- Cover image title -->
+                        <StackPanel Grid.Row="0" Style="{StaticResource CoverImageTitleStackPanelStyle}">
+                            <TextBlock  Text="{Binding Title}" Style="{StaticResource DetailTitle}"  />
+                        </StackPanel>
 
-                            <!-- Web content -->
-                            <WebView Grid.Row="1"
-                                     Style="{StaticResource ItemWebViewStyle}" 
-                                     extensions:WebView.Content="{Binding StyledDescription}" />
-                        </Grid>
-                    </ScrollViewer>
+                        <!-- Web content -->
+                        <WebView Style="{StaticResource ItemWebViewStyle}" 
+                                 MinHeight="250"
+                                 Grid.Row="1"
+                                 extensions:WebView.Content="{Binding StyledDescription}"/>
+                    </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
 
-        <!-- Loading view TODO: Fix the usage of IsBusy (not updating)
-        <controls:Loading x:Name="LoadingControl" IsLoading="{Binding ViewModel.IsBusy}">
+        <!--Loading view -->
+        <controls:Loading IsLoading="{Binding IsBusy}"
+                          Grid.Row="0"
+                          Grid.RowSpan="2">
             <StackPanel>
-                <ProgressRing Width="64" Height="64" Foreground="White" IsActive="{Binding ViewModel.IsBusy}" />
-                <TextBlock Text="Warten auf NinjaCats" Padding="0 15 0 0" HorizontalAlignment="Center" HorizontalTextAlignment="Center" Foreground="White" />
+                <ProgressRing Width="64" Height="64" Foreground="White" IsActive="{Binding IsBusy}" />
+                <TextBlock Text="Warten auf NinjaCats" Padding="0,15,0,0" HorizontalAlignment="Center" HorizontalTextAlignment="Center" Foreground="White" />
             </StackPanel>
-        </controls:Loading> -->
+        </controls:Loading>
     </Grid>
 </Page>
+ 

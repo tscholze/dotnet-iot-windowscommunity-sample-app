@@ -72,9 +72,15 @@
         <Style TargetType="ScrollViewer" x:Key="VerticalScrollViewerStyle">
             <Setter Property="Width" Value="300" />
             <Setter Property="Height" Value="440" />
-            <Setter Property="VerticalAlignment" Value="Top" />
-            <Setter Property="VerticalContentAlignment" Value="Top" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
             <Setter Property="VerticalScrollBarVisibility" Value="Hidden" />
+        </Style>
+
+        <Style TargetType="Grid" x:Key="ContentGridStyle">
+            <Setter Property="Width" Value="300" />
+            <Setter Property="Height" Value="440" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
         </Style>
 
         <Style TargetType="controls:ImageEx" x:Key="CoverImageStyle">
@@ -82,7 +88,7 @@
             <Setter Property="VerticalContentAlignment" Value="Stretch" />
         </Style>
 
-        <Style TargetType="StackPanel" x:Key="HorizontalStackPanelStyle">
+        <Style TargetType="VirtualizingStackPanel" x:Key="HorizontalStackPanelStyle">
             <Setter Property="Orientation" Value="Horizontal" />
             <Setter Property="VerticalAlignment" Value="Top" />
         </Style>
