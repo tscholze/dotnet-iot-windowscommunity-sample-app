@@ -96,6 +96,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helper\RelayCommand.cs" />
+    <Compile Include="Helper\RelayCommandGeneric.cs" />
     <Compile Include="Helper\Utils.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
